@@ -123,8 +123,13 @@ dist
 .vscode-test
 
 # yarn v2
+.yarn/releases
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore automation scripts
+*.ps1
+*.sh
