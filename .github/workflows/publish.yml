@@ -1,0 +1,53 @@
+name: Publish to Private NPM Registry
+
+on:
+  push:
+    branches:
+      - main
+    
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # Set up NPM Auth Token
+      - name: Set up NPM Auth Token
+        run: echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
+
+      # Set up Node.js
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          # Taken from [Repo README](https://github.com/actions/setup-node#readme)
+          #  
+          # > Version Spec of the version to use in SemVer notation.
+          # > It also admits such aliases as lts/*, latest, nightly and canary builds
+          # > Examples: 12.x, 10.15.1, >=10.15.0, lts/Hydrogen, 16-nightly, latest, node
+          node-version: 'latest'
+          
+          # Taken from [Repo README](https://github.com/actions/setup-node#readme)
+          # 
+          # > Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, 
+          # > and set up auth to read in from env.NODE_AUTH_TOKEN.
+          # > Default: ''
+          registry-url: 'https://npm.pkg.bridgemanaccessible.ca'
+          
+          # Taken from [Repo README](https://github.com/actions/setup-node#readme)
+          # 
+          # > Optional scope for authenticating against scoped registries. 
+          # > Will fall back to the repository owner when using the GitHub Packages registry (https://npm.pkg.github.com/).
+          scope: '@BridgemanAccessible'
+      
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          yarn install
+          yarn build
+        
+      # Publish to private NPM registry
+      - name: Publish package
+        run: npm publish
