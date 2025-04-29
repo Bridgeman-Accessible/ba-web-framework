@@ -130,6 +130,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+.yarnrc.yml
+
 # Ignore automation scripts
 *.ps1
 *.sh
