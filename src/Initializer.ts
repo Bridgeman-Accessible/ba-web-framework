@@ -25,6 +25,9 @@ export class Initializer {
     /** The middlewares to use */
     private middlewares: ((...args: any[]) => RequestHandler)[];
 
+    private app?: Application;
+    private router?: Router;
+
     /**
      * Create a new Initializer
      * 
@@ -46,6 +49,22 @@ export class Initializer {
         this.middlewares = middlewares;
     }
 
+    getExpressApp() {
+        if(typeof this.app === 'undefined') {
+            throw new Error('App is not set. Please call init() first.');
+        }
+
+        return this.app;
+    }
+
+    getRouter() {
+        if(typeof this.router === 'undefined') {
+            throw new Error('Router is not set. Please call init() first.');
+        }
+
+        return this.router;
+    }
+
     /**
      * Create the Express app
      * 
@@ -53,9 +72,9 @@ export class Initializer {
      */
     private async createExpressApp(): Promise<Application> {
         // Create the Express app
-        const app = express();
+        this.app = express();
 
-        return app;
+        return this.app;
     }
 
     /**
@@ -72,7 +91,7 @@ export class Initializer {
      * 
      * @returns The Express app that gets created and setup
      */
-    async init(): Promise<Application> {
+    async init() {
         // Create the Express app
         const app = await this.createExpressApp();
 
@@ -81,11 +100,12 @@ export class Initializer {
 
         // Setup the router (how the app handles requests)
         if(typeof this.controllersPath !== 'undefined') {
-            await (new Router(this.controllersPath)).setup(app);
+            this.router = new Router(this.controllersPath);
         }
         else {
-            await (new Router()).setup(app);
+            this.router = new Router();
         }
+        await this.router.setup(app);
 
         // Setup the static file resolver (how the app serves static files)
         if(typeof this.staticFilesPath !== 'undefined') {
@@ -107,7 +127,5 @@ export class Initializer {
         else {
             await (new Renderer()).setup(app);
         }
-
-        return app;
     }
 }

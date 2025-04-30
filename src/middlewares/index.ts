@@ -1,5 +1,9 @@
 import { globalTemplateValues } from './GlobalTemplateValuesMiddleware';
+import { HealthCheckStatus, HealthCheckMiddleware, healthCheckMiddleware } from './HealthCheckMiddleware';
 
-export {
-    globalTemplateValues
-}
+export { 
+    globalTemplateValues, 
+    HealthCheckStatus, 
+    HealthCheckMiddleware, 
+    healthCheckMiddleware 
+};

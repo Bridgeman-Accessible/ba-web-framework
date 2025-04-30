@@ -12,6 +12,7 @@
     "republish": "yarn build && cp package.json dist/package.json && cd dist && npm unpublish --registry https://npm.pkg.bridgemanaccessible.ca --force @BridgemanAccessible/ba-web-framework@1.0.0 && npm publish --registry https://npm.pkg.bridgemanaccessible.ca && cd ../"
   },
   "dependencies": {
+    "@BridgemanAccessible/ba-auth": "^1.0.0",
     "express": "^4.19.2",
     "fs-extra": "^11.2.0",
     "jsdom": "^24.1.0",

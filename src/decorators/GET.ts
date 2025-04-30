@@ -1,3 +1,5 @@
+export const GET_METADATA_KEY = 'Get';
+
 /**
  * Method decorator intended to be used on methods of a class decorated with the `@Controller` decorator.
  * 
@@ -9,6 +11,6 @@
 export function GET(path: string) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         // Define a `Get` metadata key with the path as the value on the target's propertyKey
-        Reflect.defineMetadata('Get', path, target, propertyKey);
+        Reflect.defineMetadata(GET_METADATA_KEY, path, target, propertyKey);
     };
 }

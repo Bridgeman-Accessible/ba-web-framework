@@ -1,6 +1,8 @@
 import { NextFunction } from 'express';
 import { NextHandleFunction } from 'connect';
 
+export const POST_METADATA_KEY = 'Put';
+
 /**
  * Method decorator intended to be used on methods of a class decorated with the `@Controller` decorator.
  * 
@@ -14,6 +16,6 @@ import { NextHandleFunction } from 'connect';
 export function POST(path: string, ...middleware: (NextHandleFunction | NextFunction)[]) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         // Define a `Get` metadata key with the path as the value on the target's propertyKey
-        Reflect.defineMetadata('Post', { path, middleware }, target, propertyKey);
+        Reflect.defineMetadata(POST_METADATA_KEY, { path, middleware }, target, propertyKey);
     };
 }

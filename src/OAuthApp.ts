@@ -127,7 +127,7 @@ export class OAuthApp extends App {
      * 
      * @param app The app to setup the OAuth client for
      */
-    private async setupOAuthClient(app: Application) {
+    private async setupOAuthClient(app: App) {
         // If the base URL of the app isn't provided, get it from the environment variable
         let baseAppUrl = this.baseAppUrl; 
         if(typeof baseAppUrl === 'undefined') {
@@ -142,7 +142,7 @@ export class OAuthApp extends App {
 
         console.log(`Attempting to create/register the app:\n\tApp Base URL: ${baseAppUrl}\n\tApp Abbreviation: ${appAbbrv}\n\tApp Name: ${typeof this.appName === 'undefined' ? 'uses APP_NAME environment variable (' + process.env.APP_NAME + ')' : this.appName}\n\tScopes: ${typeof this.scopes === 'undefined' ? 'uses SCOPES environment variable (' + process.env.SCOPES + ')' : this.scopes.join(', ')}`);
 
-        await Client.setup(app, baseAppUrl, this.onAuth, this.saveSecret, appAbbrv, this.appName, this.scopes, {
+        const client = await Client.setup(app.getExpressApp(), baseAppUrl, this.onAuth, this.saveSecret, appAbbrv, this.appName, this.scopes, {
             contacts: this.contacts,
             logo_url: this.logo_url,
             tos_url: this.tos_url,
@@ -152,6 +152,10 @@ export class OAuthApp extends App {
             auth_default_use_JWT: this.auth_default_use_JWT,
             auth_default_response_mode: this.auth_default_response_mode,
             client_secret: this.client_secret
+        });
+
+        client.getSetupRoutes().forEach((route) => {
+            app.getInitializer().getRouter().addOutsideFrameworkRoute(route);
         });
     }
 
@@ -164,7 +168,7 @@ export class OAuthApp extends App {
      * 
      * @param app The Express app object (that is now listening)
      */
-    async onStart(app: Application, callback?: (app: Application) => void | Promise<void>) {
+    async onStart(app: App, callback?: (app: App) => void | Promise<void>) {
         try {
             // Setup the OAuth client.
             // This is done here because we need the client to be serving/listening for requests for the auth library stuff to work 
@@ -192,7 +196,7 @@ export class OAuthApp extends App {
      * And doesn't have to worry about the OAuth details to make this work.
      * Though it does provide tweaking the OAuth details via options provided to the constructor.
      */
-    async run<T extends Initializer>(initializer?: T, callback?: (app: Application) => void | Promise<void>) {
-        await super.run(initializer, async (app: Application) => this.onStart(app, callback));
+    async run<T extends Initializer>(initializer?: T, callback?: (app: App) => void | Promise<void>) {
+        await super.run(initializer, async (app: App) => this.onStart(app, callback));
     }
 }
