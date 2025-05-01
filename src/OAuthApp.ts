@@ -142,6 +142,9 @@ export class OAuthApp extends App {
 
         console.log(`Attempting to create/register the app:\n\tApp Base URL: ${baseAppUrl}\n\tApp Abbreviation: ${appAbbrv}\n\tApp Name: ${typeof this.appName === 'undefined' ? 'uses APP_NAME environment variable (' + process.env.APP_NAME + ')' : this.appName}\n\tScopes: ${typeof this.scopes === 'undefined' ? 'uses SCOPES environment variable (' + process.env.SCOPES + ')' : this.scopes.join(', ')}`);
 
+        // Because we need this for registration to work properly. It make sense to put it here
+        app.getInitializer().getRouter().addOutsideFrameworkRoute('/.well-known/jwks.json');
+
         const client = await Client.setup(app.getExpressApp(), baseAppUrl, this.onAuth, this.saveSecret, appAbbrv, this.appName, this.scopes, {
             contacts: this.contacts,
             logo_url: this.logo_url,
@@ -155,6 +158,7 @@ export class OAuthApp extends App {
         });
 
         client.getSetupRoutes().forEach((route) => {
+            console.log(`Adding outside framework route: ${route}`);
             app.getInitializer().getRouter().addOutsideFrameworkRoute(route);
         });
     }
