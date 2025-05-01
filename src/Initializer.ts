@@ -98,15 +98,6 @@ export class Initializer {
         // Setup global middleware
         await this.setupMiddleware(app);
 
-        // Setup the router (how the app handles requests)
-        if(typeof this.controllersPath !== 'undefined') {
-            this.router = new Router(this.controllersPath);
-        }
-        else {
-            this.router = new Router();
-        }
-        await this.router.setup(app);
-
         // Setup the static file resolver (how the app serves static files)
         if(typeof this.staticFilesPath !== 'undefined') {
             await (new StaticFileResolver(this.staticFilesPath)).setup(app);
@@ -127,5 +118,14 @@ export class Initializer {
         else {
             await (new Renderer()).setup(app);
         }
+
+        // Setup the router (how the app handles requests)
+        if(typeof this.controllersPath !== 'undefined') {
+            this.router = new Router(this.controllersPath);
+        }
+        else {
+            this.router = new Router();
+        }
+        await this.router.setup(app);
     }
 }
