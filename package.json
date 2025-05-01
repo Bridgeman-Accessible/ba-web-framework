@@ -1,6 +1,6 @@
 {
   "name": "@BridgemanAccessible/ba-web-framework",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A framework for web apps built atop Node, Express and other libraries and utilties that makes creating and maintaining Bridgeman Accessible web apps easier.",
   "author": "Bridgeman Accessible <info@bridgemanaccessible.ca",
   "repository": "https://github.com/Bridgeman-Accessible/ba-web-framework.git",
